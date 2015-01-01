@@ -3,6 +3,8 @@ This is a [sonarr/NzbDrone](https://sonarr.tv/) docker container.
 
 __Note__: As of yet, I haven't managed to get the https:// aspect working.  If you check out the Dockerfile you'll see i'm installing pvk (to generate pvk's on linux), and then in cookbooks/sonarr/recipes/default.rb you'll see where i'm generating the pvk, and importing in mono.
 
+From there i'm using monos httpcfg tool to get the thumbprint and import it into the sonarr config.
+
 That all seems to be fine, however hitting https:// still doesn't work, http:// is fine though.
 
 ## Use

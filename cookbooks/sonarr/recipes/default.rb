@@ -73,7 +73,8 @@ end
 execute 'import_ssl' do
   cwd '/storage/sonarr/ssl'
   command <<-EOH
-    httpcfg -add -port 9898 -pvk cert.pvk -cert cert.pem
+    httpcfg -add -port 9898 -pvk sonarr.local.pvk -cert sonarr.local.cert
+    sed -i "s/sonarr-https-hash/$(httpcfg -list | awk '{print $4}')/g" /storage/sonarr/config.xml
   EOH
   action :nothing
 end
@@ -81,12 +82,14 @@ end
 execute 'create_ssl_certificates' do
   cwd '/storage/sonarr/ssl'
   command <<-EOH
-    openssl req -subj "/CN=sonarr.local/O=FakeOrg/C=UK" -new -newkey rsa:2048 -days 1365 -nodes -x509 -sha256 -keyout cert.key -out cert.pem
-    pvk -in cert.key -topvk -nocrypt -out cert.pvk
+    openssl genrsa -out sonarr.local.key 2048
+    openssl req -new -x509 -key sonarr.local.key -out sonarr.local.cert -days 3650 -subj /CN=sonarr.local
+    ls -al
+    pvk -in sonarr.local.key -topvk -nocrypt -out sonarr.local.pvk
   EOH
   user 'sonarr'
   group 'sonarr'
-  not_if { File.exist?('/storage/sonarr/ssl/cert.pvk') }
+  not_if { File.exist?('/storage/sonarr/ssl/sonarr.local.pvk') }
   notifies :run, 'execute[import_ssl]', :delayed
 end
 
