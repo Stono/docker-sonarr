@@ -34,7 +34,7 @@ sudo docker run -d && \
   -e="sonarr_username=sonarr" && \
   -e="sonarr_password=password" && \
   -p "8989:8989" && \
-  -p "9898:9898" stono/nzbget
+  -p "9898:9898" stono/sonarr
 ```
 
 ## Storage
