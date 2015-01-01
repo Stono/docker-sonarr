@@ -38,6 +38,13 @@ directory "/storage/sonarr" do
   group 'sonarr'
 end
 
+directory "/storage/sonarr/ssl" do
+  recursive true
+  action :create
+  owner 'sonarr'
+  group 'sonarr'
+end
+
 link "/home/sonarr/.config/NzbDrone" do
   to "/storage/sonarr"
   owner 'sonarr'
@@ -62,3 +69,25 @@ template '/storage/sonarr/config.xml' do
   action :create_if_missing
   notifies :run, 'ruby_block[show_details]', :delayed
 end
+
+execute 'import_ssl' do
+  cwd '/storage/sonarr/ssl'
+  command <<-EOH
+    httpcfg -add -port 9898 -pvk cert.pvk -cert cert.pem
+  EOH
+  action :nothing
+end
+
+execute 'create_ssl_certificates' do
+  cwd '/storage/sonarr/ssl'
+  command <<-EOH
+    openssl req -subj "/CN=sonarr.local/O=FakeOrg/C=UK" -new -newkey rsa:2048 -days 1365 -nodes -x509 -sha256 -keyout cert.key -out cert.pem
+    pvk -in cert.key -topvk -nocrypt -out cert.pvk
+  EOH
+  user 'sonarr'
+  group 'sonarr'
+  not_if { File.exist?('/storage/sonarr/ssl/cert.pvk') }
+  notifies :run, 'execute[import_ssl]', :delayed
+end
+
+
