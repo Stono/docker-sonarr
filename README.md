@@ -3,7 +3,7 @@ This is a [sonarr/NzbDrone](https://sonarr.tv/) docker container.
 
 __Note__: As of yet, I haven't managed to get the https:// aspect working.  If you check out the Dockerfile you'll see i'm installing pvk (to generate pvk's on linux), and then in cookbooks/sonarr/recipes/default.rb you'll see where i'm generating the pvk, and importing in mono.
 
-That all seems to be fine, however hitting https:// still doesn't work.
+That all seems to be fine, however hitting https:// still doesn't work, http:// is fine though.
 
 ## Use
 The easiest way to use this is probably a fig file:
@@ -35,4 +35,7 @@ sudo docker run -d && \
   -p "9898:9898" stono/nzbget
 ```
 
-All config / data gets written to /storage/nzbdrone
+## Storage
+All config / data gets written to /storage/nzbdrone on the first "fig up", so if you mount in that volume to somewhere on your system, all your configuration will be preserved through docker container updates.
+
+You could mount in your own, already existing config directory if you like.
