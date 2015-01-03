@@ -23,9 +23,8 @@ RUN curl --silent -L http://update.nzbdrone.com/v2/master/mono/NzbDrone.master.t
     rm -rf /tmp/NzbDrone* && \
     mv /opt/NzbDrone /opt/sonarr && \
     echo "PATH=/opt/sqlite3.8.5/bin:$PATH" > /etc/sysconfig/sonarr && \
-    useradd sonarr && \
-    mkdir -p /home/sonarr/.config && \
-    chown -R sonarr:sonarr /opt/sonarr
+    mkdir -p /home/docker/.config && \
+    chown -R docker:docker /opt/sonarr
 
 # Install pvk conversion tool
 RUN mkdir -p /usr/local/src/pvk && \

@@ -34,21 +34,21 @@ sonarrConfig = {
 directory "/storage/sonarr" do
   recursive true
   action :create
-  owner 'sonarr'
-  group 'sonarr'
+  owner 'docker'
+  group 'docker'
 end
 
 directory "/storage/sonarr/ssl" do
   recursive true
   action :create
-  owner 'sonarr'
-  group 'sonarr'
+  owner 'docker'
+  group 'docker'
 end
 
-link "/home/sonarr/.config/NzbDrone" do
+link "/home/docker/.config/NzbDrone" do
   to "/storage/sonarr"
-  owner 'sonarr'
-  group 'sonarr'
+  owner 'docker'
+  group 'docker'
 end
 
 ruby_block 'show_details' do
@@ -64,8 +64,8 @@ end
 template '/storage/sonarr/config.xml' do
   source 'config.xml.erb'
   variables ({ :confvars => sonarrConfig })
-  owner 'sonarr'
-  group 'sonarr'
+  owner 'docker'
+  group 'docker'
   action :create_if_missing
   notifies :run, 'ruby_block[show_details]', :delayed
 end
@@ -87,8 +87,8 @@ execute 'create_ssl_certificates' do
     ls -al
     pvk -in sonarr.local.key -topvk -nocrypt -out sonarr.local.pvk
   EOH
-  user 'sonarr'
-  group 'sonarr'
+  user 'docker'
+  group 'docker'
   not_if { File.exist?('/storage/sonarr/ssl/sonarr.local.pvk') }
   notifies :run, 'execute[import_ssl]', :delayed
 end
