@@ -29,7 +29,7 @@ RUN curl --silent -L http://update.nzbdrone.com/v2/master/mono/NzbDrone.master.t
 # Install pvk conversion tool
 RUN mkdir -p /usr/local/src/pvk && \
     cd /usr/local/src/pvk && \
-    wget --quiet http://www.drh-consultancy.demon.co.uk/pvksrc.tgz.bin && \
+    wget --quiet ftp://ftp.tw.freebsd.org/pub/FreeBSD/distfiles/pvksrc.tgz.bin && \
     tar -xzf pvksrc.tgz.bin && \
     make && \
     mv pvk /bin && \
